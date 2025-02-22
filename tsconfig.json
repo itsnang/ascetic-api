@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+      "target": "ES2019",
+      "lib": ["ESNext"],
+      "strict": true,
+      "strictNullChecks": true,
+      "sourceMap": true,
+      "allowJs": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "preserveConstEnums": true,
+      "forceConsistentCasingInFileNames": true,
+      "removeComments": true,
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "strictPropertyInitialization": false,
+      "noFallthroughCasesInSwitch": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "outDir": "dist",
+      "resolveJsonModule": true,
+      "baseUrl": "./",
+      "declaration": true,
+      "types": ["node"],
+      "paths": {
+      "@/*": [
+          "src/*"
+        ]
+      }
+    },
+    "exclude": [
+      "dist",
+      "cicd",
+      "node_modules",
+      "**/*.test.ts",
+      "setup-env.js",
+      "webhook.js",
+      "config.js"
+    ]
+  }
+  

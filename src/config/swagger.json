@@ -1,0 +1,118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Local Wear API",
+    "description": "This is handler for Local Wear API"
+  },
+  "servers": [
+    {
+      "url": "localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/trigger/v2/ocs/webhooks/trigger": {
+      "post": {
+        "summary": "OcsTriggerEvent",
+        "tags": [
+          "OcsTriggerEvent"
+        ],
+        "requestBody": {
+          "description": "A JSON object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "example": "sub_and_win"
+                  },
+                  "msisdn": {
+                    "type": "string",
+                    "example": "+85585200012"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  },
+                  "example": {
+                    "statusCode": 200,
+                    "message": "Success",
+                    "data": {
+                      "message": "OK"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "x-api-key": {
+                "description": "API key to access endpoint",
+                "schema": {
+                  "type": "string",
+                  "example": "idE3p1NWAu9DdJWdSmAqQ4vhEdPTU1LT4ymcoMbA"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OcsTriggerEvent": {
+        "type": "object",
+        "properties": {
+          "event_type": {
+            "type": "string"
+          },
+          "msisdn": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key required to access endpoints"
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ]
+}
