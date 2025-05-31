@@ -1,4 +1,4 @@
-import UserEntity from "../../../data/entity/user.entity";
+import { UserEntity } from "@/data/entity";
 
 const rootEntity = [UserEntity];
 

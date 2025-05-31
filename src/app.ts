@@ -7,6 +7,7 @@ const app = express();
 import swaggerUi from "swagger-ui-express";
 import { container } from "tsyringe";
 import rateLimit from "express-rate-limit";
+import { logger } from "./core/common/utils";
 
 import helmet from "helmet";
 import compression from "compression";
@@ -24,11 +25,35 @@ import { UserRoute } from "./routes/index";
 import cors from "cors";
 import { UserService } from "./application/services/index";
 import { RedisCache } from "./core/clients/redis";
+import { UserRepository } from "./data/repository/user.repository";
+import AppDataSource from "./core/common/db/data-source";
+
+container.register("AppDataSource", AppDataSource);
 
 container.register("IRedisCache", RedisCache);
 container.register("IHttpClient", HttpClient);
 container.register("IUserService", UserService);
-const server = createServer(app);
+container.register("IUserRepository", UserRepository);
+
+// Initialize data source
+const appDataSource = container.resolve(AppDataSource);
+appDataSource.initialize().catch((error) => {
+  logger.error("Failed to initialize database connection:", error);
+  process.exit(1);
+});
+
+// Handle application shutdown
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received. Closing database connection...");
+  await appDataSource.destroy();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  logger.info("SIGINT received. Closing database connection...");
+  await appDataSource.destroy();
+  process.exit(0);
+});
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
@@ -66,6 +91,7 @@ app.use(ErrorHandlerMiddleWare, NotFoundMiddleWare);
 
 const PORT = process.env.PORT || 8080;
 // Required to use port 8080 for AWS Elastic BeanStalk
+const server = createServer(app);
 server.listen(PORT, () => {
   console.log(`[server]: Server is running at http://localhost:${PORT}`);
 });
