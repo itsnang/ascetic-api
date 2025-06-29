@@ -1,38 +1,36 @@
-import "reflect-metadata";
-import { logger } from "../utils";
-import { DataSource, EntityTarget, ObjectLiteral, Repository } from "typeorm";
 import { injectable } from "tsyringe";
-import { InitDataSource } from "./init-data-source";
+import { logger } from "../utils";
+import DrizzleDataSource from "./drizzle-data-source";
 import InternalServerException from "../exceptions/internal-server.exception";
 
 @injectable()
 class AppDataSource {
-  private dataSource: DataSource;
+  private drizzleDataSource: DrizzleDataSource;
+
   constructor() {
-    this.dataSource = InitDataSource;
+    this.drizzleDataSource = new DrizzleDataSource();
   }
 
-  getRepository = <T extends ObjectLiteral>(target: EntityTarget<T>): Repository<T> => {
-    return this.dataSource.getRepository<T>(target);
+  getDb = () => {
+    return this.drizzleDataSource.getDb();
+  };
+
+  getClient = () => {
+    return this.drizzleDataSource.getClient();
   };
 
   initialize = async (isLogEnable = true): Promise<void> => {
     try {
-      await this.dataSource.initialize();
-      if (isLogEnable) {
-        logger.info("TypeOrm initialization is successful");
-      }
+      await this.drizzleDataSource.initialize(isLogEnable);
       return;
     } catch (error) {
-      logger.error("TypeOrm initialization is failure with an error", error as Error);
+      logger.error("Database initialization failed", error as Error);
       throw new InternalServerException({ context: error as Error });
     }
   };
 
   destroy = async (): Promise<void> => {
-    if (this.dataSource.isInitialized) {
-      await this.dataSource.destroy();
-    }
+    await this.drizzleDataSource.destroy();
   };
 }
 

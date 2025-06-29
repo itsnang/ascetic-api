@@ -1,3 +1,2 @@
-import UserSchema from "./user.schema";
-
-export { UserSchema };
+export { users, User, NewUser } from "./user.schema";
+export { default as UserValidationSchema } from "./user-validation.schema";
