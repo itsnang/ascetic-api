@@ -23,6 +23,8 @@
       "baseUrl": "./",
       "declaration": true,
       "types": ["node"],
+      "skipLibCheck": true,
+      "skipDefaultLibCheck": true,
       "paths": {
       "@/*": [
           "src/*"
@@ -37,6 +39,8 @@
       "setup-env.js",
       "webhook.js",
       "config.js"
+    ],
+    "include": [
+      "src/**/*"
     ]
   }
-  
