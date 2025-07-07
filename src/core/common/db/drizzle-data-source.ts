@@ -11,16 +11,28 @@ class DrizzleDataSource {
   private db: ReturnType<typeof drizzle>;
 
   constructor() {
-    this.client = new Pool({
-      host: process.env.DB_HOST || "localhost",
-      port: parseInt(process.env.DB_PORT || "5432"),
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASSWORD || "password",
-      database: process.env.DB_NAME || "local_wear",
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000
-    });
+    // Use DATABASE_URL if available, otherwise fall back to individual parameters
+    const databaseUrl = process.env.DATABASE_URL;
+
+    if (databaseUrl) {
+      this.client = new Pool({
+        connectionString: databaseUrl,
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000
+      });
+    } else {
+      this.client = new Pool({
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT || "5432"),
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "password",
+        database: process.env.DB_NAME || "local_wear",
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000
+      });
+    }
 
     this.db = drizzle(this.client, { schema, logger: true });
   }

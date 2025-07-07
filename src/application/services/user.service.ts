@@ -80,7 +80,7 @@ export class UserService implements IUserService {
 
   getUserByUsername = async (username: string): Promise<User | undefined> => {
     try {
-      return await this.userRepository.getUserByUsername(username);
+      return await this.userRepository.getUserByName(username);
     } catch (error) {
       logger.error("failed to get user by username", error as Error);
       throw error;

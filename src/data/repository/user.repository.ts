@@ -10,7 +10,7 @@ interface IUserRepository {
   updateUser(id: number, userData: Partial<NewUser>): Promise<User | undefined>;
   deleteUser(id: number): Promise<boolean>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByName(name: string): Promise<User | undefined>;
 }
 
 @injectable()
@@ -27,7 +27,7 @@ export class UserRepository implements IUserRepository {
 
   getUserById = async (id: number): Promise<User | undefined> => {
     const db = this.appDataSource.getDb();
-    const result = await db.select().from(users).where(eq(users.user_id, id));
+    const result = await db.select().from(users).where(eq(users.id, id));
     return result[0];
   };
 
@@ -45,14 +45,14 @@ export class UserRepository implements IUserRepository {
     const result = await db
       .update(users)
       .set(userData)
-      .where(eq(users.user_id, id))
+      .where(eq(users.id, id))
       .returning();
     return result[0];
   };
 
   deleteUser = async (id: number): Promise<boolean> => {
     const db = this.appDataSource.getDb();
-    const result = await db.delete(users).where(eq(users.user_id, id));
+    const result = await db.delete(users).where(eq(users.id, id));
     return result.rowCount ? true : false;
   };
 
@@ -62,9 +62,9 @@ export class UserRepository implements IUserRepository {
     return result[0];
   };
 
-  getUserByUsername = async (username: string): Promise<User | undefined> => {
+  getUserByName = async (name: string): Promise<User | undefined> => {
     const db = this.appDataSource.getDb();
-    const result = await db.select().from(users).where(eq(users.username, username));
+    const result = await db.select().from(users).where(eq(users.name, name));
     return result[0];
   };
 }

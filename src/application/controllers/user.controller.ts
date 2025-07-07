@@ -59,9 +59,4 @@ export class UserController {
       throw error;
     }
   };
-
-  // Keep the old method for backward compatibility
-  userServiceHanlder = async (): Promise<User[]> => {
-    return this.getAllUsers();
-  };
 }

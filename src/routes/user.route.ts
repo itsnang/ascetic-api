@@ -12,7 +12,7 @@ export const UserRoute = router.get(
   async (req: Request, res: any, next: any) => {
     try {
       const controller = container.resolve(UserController);
-      const response = await controller.userServiceHanlder();
+      const response = await controller.getAllUsers();
       return res.ok(response);
     } catch (error: any) {
       logger.error(formatLoggerResponse(req, res, error));
