@@ -53,7 +53,7 @@ export class UserRepository implements IUserRepository {
   deleteUser = async (id: number): Promise<boolean> => {
     const db = this.appDataSource.getDb();
     const result = await db.delete(users).where(eq(users.user_id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? true : false;
   };
 
   getUserByEmail = async (email: string): Promise<User | undefined> => {
